@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para el Amor de mi Vida - Feliz Cumplemes ❤️</title>
+    <!-- Tailwind CSS para diseño moderno, dinámico y móvil-first -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Fuentes con alta legibilidad y estilo script de carta -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@700&family=Montserrat:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome para iconos decorativos de motivos y música -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        .font-love {
+            font-family: 'Caveat', cursive;
+        }
+        .font-serif-elegant {
+            font-family: 'Playfair Display', serif;
+        }
+        .font-sans-clean {
+            font-family: 'Montserrat', sans-serif;
+        }
+        
+        /* Animación del latido para corazones */
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.15); }
+        }
+        .animate-heartbeat {
+            animation: heartbeat 1.5s infinite;
+        }
+
+        /* Desplazamiento suave de pantalla */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Efecto de pétalos cayendo elegantemente */
+        .petal {
+            position: absolute;
+            background-color: #ffb3c1;
+            border-radius: 150% 0 150% 150%;
+            opacity: 0.7;
+            pointer-events: none;
+            animation: fade-fall linear infinite;
+        }
+
+        @keyframes fade-fall {
+            0% {
+                transform: translateY(-10%) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.8;
+            }
+            90% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(110vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body class="font-sans-clean bg-neutral-950 text-neutral-100 overflow-x-hidden selection:bg-rose-500 selection:text-white">
+
+    <!-- Audio cargado localmente (harry.mp3) -->
+    <audio id="bgMusic" loop>
+        <source src="harry.mp3" type="audio/mpeg">
+        Tu navegador no soporta el audio.
+    </audio>
+
+    <!-- PÉTALOS DE ROSA DE FONDO (Generados dinámicamente) -->
+    <div id="petals-container" class="fixed inset-0 pointer-events-none z-10 overflow-hidden"></div>
+
+    <!-- PORTADA COMPLETA (FOTO DE PORTADA PRINCIPAL) -->
+    <section class="relative h-screen w-full flex flex-col justify-between items-center text-center overflow-hidden z-20">
+        <!-- Imagen de Fondo Principal (Apunta a portada.jpg que subirás a GitHub) -->
+        <div class="absolute inset-0 bg-cover bg-center transition-all duration-700 transform scale-105" 
+             style="background-image: url('portada.jpg');">
+        </div>
+        
+        <!-- Gradiente sofisticado para oscurecer la imagen y dar perfecta lectura al texto blanco -->
+        <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/20 to-neutral-950 z-0"></div>
+
+        <!-- Espaciador sutil superior -->
+        <div class="relative z-10 pt-12"></div>
+
+        <!-- Mensajes Centrales de la Portada -->
+        <div class="relative z-10 px-6 flex flex-col items-center">
+            <span class="font-love text-rose-400 text-5xl md:text-6xl mb-2 drop-shadow-md">Feliz cumplemes</span>
+            <h1 class="font-serif-elegant text-4xl md:text-5xl font-semibold tracking-wide drop-shadow-lg leading-tight">
+                mi corazón ❤️
+            </h1>
+            <p class="mt-6 text-sm md:text-base text-neutral-300 max-w-xs md:max-w-md tracking-wider font-light drop-shadow">
+                Activa la música abajo y desliza hacia abajo
+            </p>
+        </div>
+
+        <!-- Flecha Interactiva para hacer scroll -->
+        <div class="relative z-10 pb-16 flex flex-col items-center cursor-pointer group" onclick="scrollToContent()">
+            <span class="text-xs tracking-widest text-neutral-400 uppercase group-hover:text-rose-400 transition mb-3">
+                Deslizar hacia abajo
+            </span>
+            <div class="w-12 h-12 rounded-full border border-neutral-700 flex items-center justify-center bg-black/40 backdrop-blur-sm group-hover:border-rose-500 group-hover:bg-rose-950/20 transition-all duration-300">
+                <i class="fa-solid fa-chevron-down text-rose-400 text-lg transition-transform group-hover:translate-y-1"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- REPRODUCTOR DE MÚSICA DE HARRY STYLES -->
+    <div id="stickyPlayer" class="sticky top-0 z-40 w-full bg-neutral-950/80 backdrop-blur-md border-b border-neutral-900 px-4 py-3 transition-all duration-500 shadow-xl">
+        <div class="max-w-lg mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <!-- Disco de vinilo que gira dinámicamente -->
+                <div id="albumDisk" class="w-10 h-10 rounded-full bg-gradient-to-tr from-rose-600 to-pink-500 flex items-center justify-center text-white shadow-md shadow-rose-900/40">
+                    <i class="fa-solid fa-music text-sm" id="diskIcon"></i>
+                </div>
+                <div>
+                    <h3 class="text-xs font-semibold tracking-wide text-rose-400 uppercase">Sweet Creature</h3>
+                    <p class="text-[10px] text-neutral-400 font-light truncate max-w-[150px] md:max-w-[200px]">Harry Styles 🤍</p>
+                </div>
+            </div>
+
+            <!-- Botón de Reproducción y Tiempo restante -->
+            <div class="flex items-center gap-4">
+                <button onclick="toggleAudio()" class="w-10 h-10 rounded-full bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center shadow-lg transition-all transform active:scale-95">
+                    <i class="fa-solid fa-play ml-0.5 text-sm" id="playBtnIcon"></i>
+                </button>
+                <div class="text-[10px] text-neutral-400 font-mono w-10 text-right" id="timeRemaining">0:00</div>
+            </div>
+        </div>
+        
+        <!-- Barra de Progreso del Reproductor -->
+        <div class="absolute bottom-0 left-0 h-[2px] bg-neutral-800 w-full">
+            <div id="audioProgress" class="h-full bg-rose-500 w-0 transition-all duration-300"></div>
+        </div>
+    </div>
+
+    <!-- CUERPO PRINCIPAL CON MENSAJES Y MOTIVOS -->
+    <main id="mainContent" class="relative z-30 max-w-lg mx-auto px-6 py-16 space-y-24">
+
+        <!-- Encabezado sutil para los motivos -->
+        <div class="text-center space-y-2">
+            <span class="inline-block px-3 py-1 bg-rose-950/50 border border-rose-800/60 rounded-full text-xs text-rose-300 font-medium tracking-widest">
+                25 DE ESTE MES
+            </span>
+            <h2 class="font-serif-elegant text-2xl font-light text-neutral-200">Razones por las que te elijo cada día</h2>
+        </div>
+
+        <!-- FOTO 1: Estilo Polaroid Emotiva (Justo antes de los motivos) -->
+        <div class="bg-neutral-900/40 border border-neutral-800/60 rounded-3xl p-4 shadow-2xl space-y-4 transform -rotate-1 hover:rotate-0 transition-transform duration-500">
+            <div class="rounded-2xl overflow-hidden aspect-[4/5] bg-neutral-950 relative">
+                <!-- Tu foto nosotros1.jpg que subirás a GitHub -->
+                <img src="nosotros1.jpg" alt="Nosotros" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x750/1e1e1e/fda4af?text=Nuestra+Foto+1'">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            </div>
+            <div class="text-center py-2">
+                <p class="font-love text-3xl text-rose-300">Tú y yo, siempre ✨</p>
+                <p class="text-[10px] text-neutral-500 uppercase tracking-widest mt-1">El comienzo de algo maravilloso</p>
+            </div>
+        </div>
+
+        <!-- LISTA DE LOS 9 MOTIVOS (Móvil-Ready) -->
+        <div class="space-y-5">
+            
+            <!-- Tarjeta 1: Empatía -->
+            <div class="bg-neutral-900/60 backdrop-blur-sm border border-neutral-800/80 rounded-2xl p-5 shadow-xl flex gap-4 transform transition-all hover:border-rose-900/80 duration-300">
+                <div class="w-12 h-12 rounded-xl bg-rose-950/40 border border-rose-800/30 flex items-center justify-center text-rose-400 flex-shrink-0 text-xl">
+                    <i class="fa-solid fa-heart-circle-check animate-heartbeat text-rose-400"></i>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xs text-rose-400 font-semibold tracking-wider uppercase">Tu empatía y gran corazón</h3>
+                    <p class="text-neutral-300 text-sm font-light leading-relaxed">
+                        Me enamora ver cómo te preocupas por los demás.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tarjeta 2: Paciencia (Con tu foto nosotros2.jpeg integrada perfectamente) -->
+            <div class="bg-neutral-900/60 backdrop-blur-sm border border-neutral-800/80 rounded-2xl overflow-hidden shadow-xl transform transition-all hover:border-rose-900/80 duration-300">
+                <div class="h-48 bg-cover bg-center relative" style="background-image: url('nosotros2.jpeg');" id="photo2Container">
+                    <!-- Fallback visual si no se encuentra la imagen en local aún -->
+                    <div class="absolute inset-0 bg-neutral-950/80 flex flex-col items-center justify-center p-4 text-center" id="photo2Fallback">
+                        <i class="fa-solid fa-images text-neutral-700 text-3xl mb-2"></i>
+                        <span class="text-xs text-neutral-500">Aquí irá tu foto: nosotros2.jpeg</span>
+                    </div>
+                    <script>
+                        // Quitar el fallback si la imagen existe
+                        const imgTest = new Image();
+                        imgTest.src = 'nosotros2.jpeg';
+                        imgTest.onload = () => {
+                            document.getElementById('photo2Fallback').style.display = 'none';
+                        };
+                    </script>
+                    <div class="absolute inset-0 bg-gradient-to-t from-neutral-900 via-transparent to-transparent"></div>
+                </div>
+                <div class="p-5 flex gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-rose-950/40 border border-rose-800/30 flex items-center justify-center text-rose-400 flex-shrink-0 text-xl">
+                        <i class="fa-solid fa-feather-pointed text-rose-400"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-xs text-rose-400 font-semibold tracking-wider uppercase">Tu paciencia</h3>
+                        <p class="text-neutral-300 text-sm font-light leading-relaxed">
+                            Por cómo me bancás y me cuidás.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta 3: Aceptación -->
+            <div class="bg-neutral-900/60 backdrop-blur-sm border border-neutral-800/80 rounded-2xl p-5 shadow-xl flex gap-4 transform transition-all hover:border-rose-900/80 duration-300">
+                <div class="w-12 h-12 rounded-xl bg-rose-950/40 border border-rose-800/30 flex items-center justify-center text-rose-400 flex-shrink-0 text-xl">
+                    <i class="fa-solid fa-hand-holding-heart text-rose-400"></i>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xs text-rose-400 font-semibold tracking-wider uppercase">Tu aceptación</h3>
+                    <p class="text-neutral-300 text-sm font-light leading-relaxed">
+                        Porque me amás y me aceptás tal cual soy.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tarjeta 4: Apoyo -->
+            <div class="bg-neutral-900/60 backdrop-blur-sm border border-neutral-800/80 rounded-2xl p-5 shadow-xl flex gap-4 transform transition-all hover:border-rose-900/80 duration-300">
+                <div class="w-12 h-12 rounded-xl bg-rose-950/40 border border-rose-800/30 flex items-center justify-center text-rose-400 flex-shrink-0 text-xl">
+                    <i class="fa-solid fa-hands-holding text-rose-400"></i>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xs text-rose-400 font-semibold tracking-wider uppercase">Tu apoyo</h3>
+                    <p class="text-neutral-300 text-sm font-light leading-relaxed">
+                        Cuando dudo de mí, o cuando se ponen difíciles las cosas, siempre estás ahí, aguantando los trapos.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tarjeta 5: Atención -->
+            <div class="bg-neutral-900/60 backdrop-blur-sm border border-neutral-800/80 rounded-2xl p-5 shadow-xl flex gap-4 transform transition-all hover:border-rose-900/80 duration-300">
+                <div class="w-12 h-12 rounded-xl bg-rose-950/40 border border-rose-800/30 flex items-center justify-center text-rose-400 flex-shrink-0 text-xl">
+                    <i class="fa-solid fa-envelope-open-text text-rose-400"></i>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xs text-rose-400 font-semibold tracking-wider uppercase">Tu atención</h3>
+                    <p class="text-neutral-300 text-sm font-light leading-relaxed">
+                        Por estar siempre atenta a esos pequeños detalles que me alegran el día.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tarjeta 6: Esencia -->
+            <div class="bg-neutral-900/60 backdrop-blur-sm border border-neutral-800/80 rounded-2xl p-5 shadow-xl flex gap-4 transform transition-all hover:border-rose-900/80 duration-300">
+                <div class="w-12 h-12 rounded-xl bg-rose-950/40 border border-rose-800/30 flex items-center justify-center text-rose-400 flex-shrink-0 text-xl">
+                    <i class="fa-solid fa-gem text-rose-400 animate-pulse"></i>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xs text-rose-400 font-semibold tracking-wider uppercase">Tu esencia</h3>
+                    <p class="text-neutral-300 text-sm font-light leading-relaxed">
+                        Por la increíble persona que sos por dentro y por fuera.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tarjeta 7: Mirada -->
+            <div class="bg-neutral-900/60 backdrop-blur-sm border border-neutral-800/80 rounded-2xl p-5 shadow-xl flex gap-4 transform transition-all hover:border-rose-900/80 duration-300">
+                <div class="w-12 h-12 rounded-xl bg-rose-950/40 border border-rose-800/30 flex items-center justify-center text-rose-400 flex-shrink-0 text-xl">
+                    <i class="fa-solid fa-eye text-rose-400"></i>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xs text-rose-400 font-semibold tracking-wider uppercase">Tu mirada</h3>
+                    <p class="text-neutral-300 text-sm font-light leading-relaxed">
+                        La forma en la que me mirás y hacés que todo valga la pena.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tarjeta 8: Detalles -->
+            <div class="bg-neutral-900/60 backdrop-blur-sm border border-neutral-800/80 rounded-2xl p-5 shadow-xl flex gap-4 transform transition-all hover:border-rose-900/80 duration-300">
+                <div class="w-12 h-12 rounded-xl bg-rose-950/40 border border-rose-800/30 flex items-center justify-center text-rose-400 flex-shrink-0 text-xl">
+                    <i class="fa-solid fa-sparkles text-rose-400"></i>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xs text-rose-400 font-semibold tracking-wider uppercase">Tus detalles</h3>
+                    <p class="text-neutral-300 text-sm font-light leading-relaxed">
+                        Esas pequeñas cosas del día a día que me enamoran cada día más.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Tarjeta 9: Futuro a tu lado -->
+            <div class="bg-neutral-900/80 backdrop-blur-sm border-2 border-rose-900/40 rounded-2xl p-5 shadow-2xl flex gap-4 transform transition-all hover:border-rose-500 duration-300">
+                <div class="w-12 h-12 rounded-xl bg-rose-950/60 border border-rose-500 flex items-center justify-center text-rose-400 flex-shrink-0 text-xl">
+                    <i class="fa-solid fa-infinity text-rose-300 animate-pulse"></i>
+                </div>
+                <div class="space-y-1">
+                    <h3 class="text-xs text-rose-300 font-bold tracking-wider uppercase">El futuro que imagino a tu lado</h3>
+                    <p class="text-neutral-200 text-sm font-light leading-relaxed">
+                        Porque cuando pienso en los próximos meses y años, es imposible no verte, siempre caminando juntos.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOTO 3: El momento perfecto (Transición visual preciosa antes de la carta) -->
+        <div class="space-y-3">
+            <div class="rounded-3xl overflow-hidden shadow-2xl border border-neutral-800/60 relative">
+                <!-- Tu foto nosotros3.jpeg que subirás a GitHub -->
+                <img src="nosotros3.jpeg" alt="Nosotros Tres" class="w-full h-auto object-cover max-h-[350px]" onerror="this.src='https://placehold.co/600x400/1e1e1e/fda4af?text=Nuestra+Foto+3'">
+                <div class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent text-center">
+                    <p class="text-xs text-rose-300 tracking-widest uppercase font-medium">Con vos el tiempo se detiene 🤍</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: LA CARTA DE AMOR PERSONALIZADA -->
+        <article class="bg-neutral-900/90 border-2 border-rose-900/30 rounded-3xl p-8 relative overflow-hidden shadow-2xl">
+            <!-- Esquina de carta antigua decorativa -->
+            <div class="absolute -top-12 -right-12 w-24 h-24 bg-rose-950/30 rounded-full blur-xl"></div>
+            
+            <div class="text-center space-y-1 mb-8">
+                <div class="text-3xl text-rose-500 mb-2"><i class="fa-solid fa-envelope-open-text"></i></div>
+                <h3 class="font-serif-elegant text-2xl font-semibold tracking-wide text-rose-100">Mi amor eterno,</h3>
+                <p class="text-xs text-rose-400 italic"></p>
+            </div>
+
+            <!-- Párrafos de la carta proporcionada -->
+            <div class="space-y-6 text-neutral-300 text-sm md:text-base leading-relaxed font-light text-justify">
+                <p>
+                    Hola mi bebé, ¿cómo estás? Quizás para algunos hoy es un día más en el calendario, pero para mí es otro mes de agradecer a Dios por coincidir en este camino. Cada día 25 es la excusa perfecta para parar un segundo, mirarte a los ojos y recordarte la increíble persona que sos. :)
+                </p>
+                <p>
+                    Me encanta todo de vos. Me encanta cuando planificamos nuestro futuro... Sos mi refugio, la razón por la que siempre tengo una sonrisa lista para encarar el día.
+                </p>
+                <p>
+                    Gracias por la paciencia que me regalás (mucha paciencia) y por el gran, gran amor que me das. Dicen que el chocolate da felicidad y placer al comerlo, pero ningún chocolate le llega a los talones a lo que siento por vos al verte (oooaaaaa jaja).
+                </p>
+                <p>
+                    Te amo inmensamente, bombón, no me alcanzaría la vida para demostrártelo. ¡Te amo muchote!
+                </p>
+            </div>
+
+            <div class="mt-10 pt-6 border-t border-rose-900/20 text-center">
+                <p class="font-love text-4xl text-rose-400">Feliz Cumplemes,</p>
+                <p class="text-xs text-neutral-400 mt-2 tracking-widest uppercase">Tu novio, que te ama mucho, Hugo ❤️</p>
+            </div>
+        </article>
+
+        <!-- SECCIÓN DE DETALLES DEL CHOCOLATE -->
+        <div class="text-center py-6 space-y-4">
+            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-neutral-900 border border-neutral-800 text-xs text-neutral-400">
+                <i class="fa-solid fa-cookie-bite text-rose-500 animate-pulse"></i>
+                Espero que disfrutes mucho del chocolate
+            </div>
+            <p class="text-[10px] text-neutral-600 tracking-wider">
+                Hecho a mano con todo mi amor • 2026
+            </p>
+        </div>
+
+    </main>
+
+    <!-- NOTIFICACIÓN DE PRIMERA INTERACCIÓN (Para guiarla si no sabe cómo activar la música) -->
+    <div id="musicToast" class="fixed bottom-6 left-6 right-6 md:left-auto md:right-6 md:max-w-sm bg-neutral-900/95 border border-rose-800 text-neutral-100 p-4 rounded-2xl shadow-2xl z-50 flex items-start gap-3 transform translate-y-24 opacity-0 transition-all duration-500">
+        <div class="w-10 h-10 rounded-full bg-rose-950/80 border border-rose-800 flex items-center justify-center text-rose-400 flex-shrink-0 animate-heartbeat">
+            <i class="fa-solid fa-music"></i>
+        </div>
+        <div class="flex-1 space-y-1">
+            <h4 class="text-xs font-semibold text-rose-300">¿Escuchamos música?</h4>
+            <p class="text-[11px] text-neutral-300 font-light">Toca el botón flotante del reproductor arriba para ambientar tu sorpresa de hoy.</p>
+            <div class="pt-1 flex gap-2 justify-end">
+                <button onclick="dismissToast()" class="text-[10px] text-neutral-400 hover:text-white px-2 py-1">Entendido</button>
+                <button onclick="playMusicFromToast()" class="text-[10px] bg-rose-600 hover:bg-rose-500 font-semibold px-3 py-1 rounded-lg text-white">Reproducir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT: Lógica interactiva para la música, los pétalos de rosa flotando y el scroll -->
+    <script>
+        // Elementos del DOM
+        const audio = document.getElementById('bgMusic');
+        const playBtnIcon = document.getElementById('playBtnIcon');
+        const audioProgress = document.getElementById('audioProgress');
+        const timeRemaining = document.getElementById('timeRemaining');
+        const albumDisk = document.getElementById('albumDisk');
+        const diskIcon = document.getElementById('diskIcon');
+        const toast = document.getElementById('musicToast');
+
+        // Función para scroll suave hacia abajo
+        function scrollToContent() {
+            const playerHeight = document.getElementById('stickyPlayer').offsetHeight;
+            const contentPosition = document.getElementById('mainContent').offsetTop;
+            window.scrollTo({
+                top: contentPosition - playerHeight - 20,
+                behavior: 'smooth'
+            });
+        }
+
+        // Control del reproductor de audio
+        function toggleAudio() {
+            if (audio.paused) {
+                audio.play().then(() => {
+                    playBtnIcon.className = "fa-solid fa-pause text-sm";
+                    albumDisk.classList.add('animate-spin');
+                    diskIcon.className = "fa-solid fa-compact-disc text-sm";
+                }).catch(err => {
+                    console.log("No se pudo iniciar el audio de manera automática. Requiere interacción del usuario.", err);
+                });
+            } else {
+                audio.pause();
+                playBtnIcon.className = "fa-solid fa-play ml-0.5 text-sm";
+                albumDisk.classList.remove('animate-spin');
+                diskIcon.className = "fa-solid fa-music text-sm";
+            }
+        }
+
+        // Actualizar barra de progreso del reproductor
+        audio.addEventListener('timeupdate', () => {
+            if (audio.duration) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                audioProgress.style.width = percent + '%';
+                
+                // Mostrar tiempo restante
+                const rTime = audio.duration - audio.currentTime;
+                const minutes = Math.floor(rTime / 60);
+                const seconds = Math.floor(rTime % 60);
+                timeRemaining.textContent = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+            }
+        });
+
+        // Mostrar Toast de música tras 2 segundos si el usuario no ha interactuado con la música
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                if (audio.paused) {
+                    toast.classList.remove('translate-y-24', 'opacity-0');
+                    toast.classList.add('translate-y-0', 'opacity-100');
+                }
+            }, 2500);
+        });
+
+        function dismissToast() {
+            toast.classList.add('translate-y-24', 'opacity-0');
+            toast.classList.remove('translate-y-0', 'opacity-100');
+        }
+
+        function playMusicFromToast() {
+            toggleAudio();
+            dismissToast();
+        }
+
+        // GENERADOR DE PÉTALOS FLOTANTES DE FONDO
+        const petalsContainer = document.getElementById('petals-container');
+        const petalColors = ['#ffb3c1', '#ff8fa3', '#ff758f', '#ffccd5', '#ffe5ec'];
+
+        function createPetal() {
+            const petal = document.createElement('div');
+            petal.className = 'petal';
+            
+            // Atributos aleatorios para dar realismo orgánico
+            const size = Math.random() * 12 + 6; // Entre 6px y 18px
+            const left = Math.random() * 100; // Posición horizontal inicial (%)
+            const duration = Math.random() * 8 + 6; // Duración de caída entre 6s y 14s
+            const delay = Math.random() * 5; // Retardo al inicio de animación
+            const color = petalColors[Math.floor(Math.random() * petalColors.length)];
+
+            petal.style.width = `${size}px`;
+            petal.style.height = `${size}px`;
+            petal.style.left = `${left}%`;
+            petal.style.backgroundColor = color;
+            petal.style.animationDuration = `${duration}s`;
+            petal.style.animationDelay = `${delay}s`;
+            
+            // Rotaciones iniciales e inclinaciones orgánicas
+            petal.style.transform = `rotate(${Math.random() * 360}deg)`;
+
+            petalsContainer.appendChild(petal);
+
+            // Eliminar pétalo una vez termina su caída
+            setTimeout(() => {
+                petal.remove();
+            }, (duration + delay) * 1000);
+        }
+
+        // Iniciar ráfaga constante de pétalos
+        for (let i = 0; i < 20; i++) {
+            createPetal();
+        }
+        setInterval(createPetal, 600);
+
+    </script>
+</body>
+</html>
